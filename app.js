@@ -1,15 +1,20 @@
-var express = require("express");
-const connect = require("./config/dbConfig");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const app = require("express")();
 
-const transactionRoutes = require("./routes/transaction");
-const usersRouter = require("./routes/users");
+// Environment Path
+require("dotenv").config({ path: "./config.env" });
+require("./db/connection");
+port = process.env.PORT;
 
-var app = express();
+// importing Routes
+const route = require("./routes/home.route");
+const dealerRoute = require("./routes/dealer.route");
 
-connect();
+// Middleware
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
+<<<<<<< HEAD
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -25,3 +30,14 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+=======
+// Routes
+app.use("/", route);
+app.use("/get-dealer", dealerRoute);
+app.use("/create-dealer", dealerRoute);
+
+// lIstening Server
+app.listen(port, () => {
+	console.log(`Server is starting on port ${port}`);
+});
+>>>>>>> 782e211 (Jish First Commit)
