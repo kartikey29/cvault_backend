@@ -32,9 +32,7 @@ app.use((req, res) => {
 module.exports = app;
 =======
 // Routes
-app.use("/", route);
-app.use("/get-dealer", dealerRoute);
-app.use("/create-dealer", dealerRoute);
+app.use("/dealer", dealerRoute);
 
 // lIstening Server
 app.listen(port, () => {
