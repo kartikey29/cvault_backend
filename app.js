@@ -6,8 +6,8 @@ require("./db/connection");
 port = process.env.PORT;
 
 // importing Routes
-const route = require("./routes/home.route");
 const dealerRoute = require("./routes/dealer.route");
+const transactionRoute = require("./routes/transaction.route");
 
 // Middleware
 const bodyParser = require("body-parser");
@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
 app.use("/dealer", dealerRoute);
+app.use("/transaction", transactionRoute);
 
 // lIstening Server
 app.listen(port, () => {
