@@ -18,7 +18,4 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/dealer", dealerRoute);
 app.use("/transaction", transactionRoute);
 
-// lIstening Server
-app.listen(port, () => {
-  console.log(`Server is starting on port ${port}`);
-});
+module.exports = app;
