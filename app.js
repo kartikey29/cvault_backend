@@ -15,9 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
-app.use("/", route);
-app.use("/get-dealer", dealerRoute);
-app.use("/create-dealer", dealerRoute);
+app.use("/dealer", dealerRoute);
 
 // lIstening Server
 app.listen(port, () => {
