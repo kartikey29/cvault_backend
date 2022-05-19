@@ -18,4 +18,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/dealer", dealerRoute);
 app.use("/transaction", transactionRoute);
 
+//handle incorrect req
+
+app.use((req, res) => {
+  return res.status(500).send({ message: "incorrect API route hit" });
+});
+
 module.exports = app;
