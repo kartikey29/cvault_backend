@@ -18,7 +18,7 @@ const advertLink = async (req, res) => {
 		const findLink = await advertise.find({ link });
 		// If found Deleting The link data
 		if (findLink == bodyData) {
-			await advertise.deleteMany({ link: link });
+			await advertise.deleteMany({});
 		} else {
 			// if Not Found inserting the link Data
 			const insertLink = await advertise({
