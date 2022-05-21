@@ -20,7 +20,7 @@ const advertLink = async (req, res) => {
 		if (findLink == bodyData) {
 			await advertise.deleteMany({ link: link });
 		} else {
-			// in Not Found inserting the link Data
+			// if Not Found inserting the link Data
 			const insertLink = await advertise({
 				link: bodyData.link,
 			});
