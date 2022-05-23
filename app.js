@@ -1,5 +1,5 @@
 const app = require("express")();
-
+const logger = require("morgan");
 // Environment Path
 require("dotenv").config({ path: "./config.env" });
 require("./db/connection");
@@ -13,6 +13,7 @@ const advertisementRoute = require("./routes/advertisement.route");
 // Middleware
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
+app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
@@ -23,7 +24,7 @@ app.use("/advertisement", advertisementRoute);
 //handle incorrect req
 
 app.use((req, res) => {
-  return res.status(500).send({ message: "incorrect API route hit" });
+	return res.status(500).send({ message: "incorrect API route hit" });
 });
 
 module.exports = app;
