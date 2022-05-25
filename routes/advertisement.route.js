@@ -1,7 +1,10 @@
-const controller = require("../controller/advertisement.controller");
-const route = require("express").Router();
+const {
+	getAdvert,
+	advertLink,
+} = require("../controller/advertisement.controller");
+const advertisementRoute = require("express").Router();
 
-route.post("/link", controller.advertLink);
-route.post("/get-link", controller.getAdvert);
+advertisementRoute.get("/get-link", getAdvert);
+advertisementRoute.post("/link", advertLink);
 
-module.exports = route;
+module.exports = advertisementRoute;

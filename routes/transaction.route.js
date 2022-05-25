@@ -1,7 +1,11 @@
 var express = require("express");
-var router = express.Router();
-const transaction = require("../controller/transaction.controller");
+var transactionRoute = express.Router();
+const { postTrans, getTrans } = require("../controller/transaction.controller");
 
-/* GET home page. */
-router.get("/test", transaction.test);
-module.exports = router;
+/* POST Transaction page. */
+transactionRoute.post("/post-transaction", postTrans);
+
+/* GET Transaction page. */
+transactionRoute.get("/get-transaction", getTrans);
+
+module.exports = transactionRoute;
