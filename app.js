@@ -17,9 +17,7 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Routes
-app.use("/dealer", dealerRoute);
-app.use("/transaction", transactionRoute);
-app.use("/advertisement", advertisementRoute);
+app.use("/api", advertisementRoute, transactionRoute, dealerRoute);
 
 //handle incorrect req
 

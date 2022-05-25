@@ -2,7 +2,7 @@
 const Dealer = require("../models/dealer.model");
 
 // Dealer Post Request
-const createDealer = async (req, res) => {
+exports.createDealer = async (req, res) => {
 	try {
 		const data = req.body; /// put something later
 		const InsertDealer = await new Dealer({
@@ -25,7 +25,7 @@ const createDealer = async (req, res) => {
 };
 
 //Dealer Get Request
-const getDealer = async (req, res) => {
+exports.getDealer = async (req, res) => {
 	try {
 		const readData = await Dealer.find({});
 		res.send(readData).status(200);
@@ -35,9 +35,4 @@ const getDealer = async (req, res) => {
 			message: "something went wrong",
 		});
 	}
-};
-
-module.exports = {
-	createDealer,
-	getDealer,
 };

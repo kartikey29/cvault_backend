@@ -1,10 +1,10 @@
-const controller = require("../controller/dealer.controller");
-const route = require("express").Router();
+const { getDealer, createDealer } = require("../controller/dealer.controller");
+const dealerRoute = require("express").Router();
 
 /* GET Dealers  */
-route.get("/get-dealer", controller.getDealer);
+dealerRoute.get("/get-dealer", getDealer);
 
 /* Create Dealers  */
-route.post("/create-dealer", controller.createDealer);
+dealerRoute.post("/create-dealer", createDealer);
 
-module.exports = route;
+module.exports = dealerRoute;
