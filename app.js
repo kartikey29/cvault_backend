@@ -1,42 +1,29 @@
-var createError = require("http-errors");
-var express = require("express");
-const connect = require("./config/dbConfig");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const app = require("express")();
+const logger = require("morgan");
+// Environment Path
+require("dotenv").config({ path: "./config.env" });
+require("./db/connection");
+port = process.env.PORT;
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+// importing Routes
+const dealerRoute = require("./routes/dealer.route");
+const transactionRoute = require("./routes/transaction.route");
+const advertisementRoute = require("./routes/advertisement.route");
 
-var app = express();
-
-connect();
-
+// Middleware
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.urlencoded({ extended: false }));
 
-/////  Routes   ///////
+//
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api", advertisementRoute, transactionRoute, dealerRoute);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+//handle incorrect req
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+app.use((req, res) => {
+  return res.status(500).send({ message: "incorrect API route hit" });
 });
 
 module.exports = app;
