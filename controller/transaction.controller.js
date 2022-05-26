@@ -1,4 +1,5 @@
 const Transaction = require("../models/transaction.model");
+const Dealer = require("../models/dealer.model");
 
 const postTrans = async (req, res) => {
   try {
@@ -14,6 +15,11 @@ const postTrans = async (req, res) => {
       status,
     } = req.body;
 
+    const dealer = await Dealer.findOne({ dealerId });
+    if (!dealer) {
+      throw "dealer doesn't exits";
+    }
+
     const insertTrans = await new Transaction({
       transactionId,
       transactionType,
@@ -26,6 +32,11 @@ const postTrans = async (req, res) => {
       dealerId,
     });
     await insertTrans.save();
+
+    dealer.transactions.push(insertTrans._id);
+
+    await dealer.save();
+
     return res
       .status(201)
       .json({ message: "Data inserted Successfully", data: insertTrans });
