@@ -2,7 +2,7 @@ const Transaction = require("../models/transaction.model");
 
 const postTrans = async (req, res) => {
   try {
-    console.log(req.body);
+    const { customerId, dealerId } = req.body;
     const insertTrans = await new Transaction({
       transctionId: req.body.transctionId,
       transactionType: req.body.transactionType,
@@ -11,6 +11,8 @@ const postTrans = async (req, res) => {
       costPrice: req.body.costPrice,
       quantity: req.body.quantity,
       accepted: req.body.accepted,
+      customerId,
+      dealerId,
     });
     await insertTrans.save();
     return res
@@ -18,17 +20,32 @@ const postTrans = async (req, res) => {
       .json({ message: "Data inserted Successfully", data: insertTrans });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: "Something went wrong" });
+    return res.status(400).json({ error });
   }
 };
 const getTrans = async (req, res) => {
   try {
-    const fetchTrans = await Transaction.find({});
-    res.status(200).send(fetchTrans);
+    const { dealerId } = req.body;
+    const fetchTrans = await Transaction.find({ dealerId });
+    return res.status(200).send(fetchTrans);
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: "Something went wrong" });
+    return res.status(400).json({ error });
   }
 };
 
-module.exports = { postTrans, getTrans };
+const editTrans = async (req, res) => {
+  try {
+    const update = req.body;
+    const { transactionId } = req.body;
+    if (!transactionId) {
+      throw "Send transaction ID";
+    }
+    const trans = await Transaction.findOneAndUpdate({ transactionId }, update);
+    return res.send({ updated: trans });
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
+
+module.exports = { postTrans, getTrans, editTrans };
