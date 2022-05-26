@@ -8,12 +8,12 @@ module.exports = mongoose.model(
       required: true,
     },
     dealerId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       required: true,
       ref: "Dealer",
     },
     customerId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Types.ObjectId,
       required: true,
       ref: "Customer",
     },

@@ -25,6 +25,12 @@ const dealerSchema = new mongoose.Schema({
     required: true,
     default: true,
   },
+  transactions: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "transaction",
+    },
+  ],
 });
 
 // Dealer Model

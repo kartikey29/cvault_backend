@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/transaction", transactionRoute);
 app.use("/advertisment", advertisementRoute);
 app.use("/dealer", dealerRoute);
-app.use("/customer", customerRoute);
+// app.use("/customer", customerRoute);
 
 //handle incorrect req
 
