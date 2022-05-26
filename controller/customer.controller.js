@@ -4,8 +4,10 @@ const Customer = require("../models/cutomer.model");
 // Get Request
 exports.getCustomer = async (req, res) => {
 	try {
+		const fetchCustomer = await new Customer.find({});
 		return res.status(200).json({
-			message: success,
+			message: "Customer Data ",
+			data: fetchCustomer,
 		});
 	} catch (error) {
 		return res.status(400).json({ error: "Something went worng" });
