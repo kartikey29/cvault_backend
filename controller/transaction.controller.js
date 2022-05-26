@@ -2,15 +2,26 @@ const Transaction = require("../models/transaction.model");
 
 const postTrans = async (req, res) => {
   try {
-    const { customerId, dealerId } = req.body;
+    const {
+      customerId,
+      dealerId,
+      transactionId,
+      transactionType,
+      cryptoType,
+      price,
+      costPrice,
+      quantity,
+      status,
+    } = req.body;
+
     const insertTrans = await new Transaction({
-      transctionId: req.body.transctionId,
-      transactionType: req.body.transactionType,
-      cryptoType: req.body.cryptoType,
-      price: req.body.price,
-      costPrice: req.body.costPrice,
-      quantity: req.body.quantity,
-      accepted: req.body.accepted,
+      transactionId,
+      transactionType,
+      cryptoType,
+      price,
+      costPrice,
+      quantity,
+      status,
       customerId,
       dealerId,
     });
