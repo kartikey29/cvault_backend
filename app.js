@@ -9,6 +9,7 @@ port = process.env.PORT;
 const dealerRoute = require("./routes/dealer.route");
 const transactionRoute = require("./routes/transaction.route");
 const advertisementRoute = require("./routes/advertisement.route");
+const customerRoute = require("./routes/customer.route");
 
 // Middleware
 const bodyParser = require("body-parser");
@@ -21,12 +22,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/transaction", transactionRoute);
 app.use("/advertisment", advertisementRoute);
 app.use("/dealer", dealerRoute);
-// app.use("/customer", customerRoute);
+app.use("/customer", customerRoute);
 
 //handle incorrect req
 
 app.use((req, res) => {
-  return res.status(500).send({ message: "incorrect API route hit" });
+	return res.status(500).send({ message: "incorrect API route hit" });
 });
 
 module.exports = app;
