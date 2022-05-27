@@ -10,8 +10,8 @@ const {
 transactionRoute.post("/post-transaction", postTrans);
 
 /* GET Transaction page. */
-transactionRoute.get("/get-transaction", getTrans);
+transactionRoute.post("/get-transaction", getTrans);
 
-transactionRoute.post("edit-trans", editTrans);
+transactionRoute.post("/edit-trans", editTrans);
 
 module.exports = transactionRoute;

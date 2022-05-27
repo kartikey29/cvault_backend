@@ -1,6 +1,6 @@
 const {
-	getAdvert,
-	advertLink,
+  getAdvert,
+  advertLink,
 } = require("../controller/advertisement.controller");
 const advertisementRoute = require("express").Router();
 
@@ -8,6 +8,6 @@ const advertisementRoute = require("express").Router();
 advertisementRoute.get("/get-link", getAdvert);
 
 /* Create advertisement  */
-advertisementRoute.post("/link", advertLink);
+advertisementRoute.post("/post-link", advertLink);
 
 module.exports = advertisementRoute;
