@@ -25,7 +25,7 @@ exports.createDealer = async (req, res) => {
 //Dealer Get Request
 exports.getDealer = async (req, res) => {
 	try {
-		const readData = await Dealer.find({}).populate("Transaction");
+		const readData = await Dealer.find({}).populate("transaction");
 		return res.send(readData).status(200);
 	} catch (error) {
 		console.log(error);
