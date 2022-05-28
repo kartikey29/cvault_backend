@@ -4,18 +4,18 @@ const Dealer = require("../models/dealer.model");
 const postTrans = async (req, res) => {
   try {
     const {
-      customerId,
-      dealerId,
+      receiversPhone,
+      sendersID,
       transactionId,
       transactionType,
       cryptoType,
       price,
       costPrice,
       quantity,
-      status,
+      currency,
     } = req.body;
 
-    const dealer = await Dealer.findOne({ dealerId });
+    const dealer = await Dealer.findOne({ sendersID });
     if (!dealer) {
       throw "dealer doesn't exits";
     }
@@ -27,9 +27,9 @@ const postTrans = async (req, res) => {
       price,
       costPrice,
       quantity,
-      status,
-      customerId,
-      dealerId,
+      receiversPhone,
+      currency,
+      sendersID: dealer._id,
     });
     await insertTrans.save();
 
@@ -63,7 +63,11 @@ const editTrans = async (req, res) => {
     if (!transactionId) {
       throw "Send transaction ID";
     }
-    const trans = await Transaction.findOneAndUpdate({ transactionId }, update);
+    const trans = await Transaction.findOneAndUpdate(
+      { transactionId },
+      update,
+      { returnOriginal: false }
+    );
     return res.send({ updated: trans });
   } catch (e) {
     return res.status(400).send(e);

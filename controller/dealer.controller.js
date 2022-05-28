@@ -6,6 +6,7 @@ exports.createDealer = async (req, res) => {
 	try {
 		const data = req.body; /// put something later
 		const InsertDealer = await new Dealer({
+			dealerId: data.dealerId,
 			name: data.name,
 			phone: data.phone,
 			email: data.email,
@@ -25,12 +26,26 @@ exports.createDealer = async (req, res) => {
 //Dealer Get Request
 exports.getDealer = async (req, res) => {
 	try {
-		const readData = await Dealer.find({}).populate("transaction");
-		return res.send(readData).status(200);
+		const readData = await Dealer.find({}).populate("transactions");
+		return res.status(200).send(readData);
 	} catch (error) {
-		console.log(error);
 		return res.status(400).json({
-			message: "something went wrong",
+			error,
 		});
+	}
+};
+
+exports.changeActive = async (req, res) => {
+	try {
+		const { dealerId } = req.body;
+		const dealer = await Dealer.findOne({ dealerId });
+		if (!dealer) {
+			throw "dealer doesnt exist";
+		}
+		dealer.active = !dealer.active;
+		await dealer.save();
+		return res.status(200).send(dealer);
+	} catch (e) {
+		return res.status(400).send(e);
 	}
 };
