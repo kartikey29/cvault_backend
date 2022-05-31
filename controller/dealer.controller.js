@@ -2,42 +2,50 @@
 const Dealer = require("../models/dealer.model");
 
 // Dealer Post Request
-const createDealer = async (req, res) => {
-	try {
-		const data = req.body; /// put something later
-		const InsertDealer = await new Dealer({
-			name: data.name,
-			phone: data.phone,
-			email: data.email,
-			status: data.status,
-		});
-		await InsertDealer.save();
-		res.status(200).json({
-			success: true,
-			message: "Data Inserted Successfully",
-		});
-	} catch (error) {
-		console.log(error);
-		res.status(400).json({
-			message: "Something Went Wrong ",
-		});
-	}
+exports.createDealer = async (req, res) => {
+  try {
+    const data = req.body; /// put something later
+    const InsertDealer = await new Dealer({
+      dealerId: data.dealerId,
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+    });
+    await InsertDealer.save();
+    return res
+      .status(200)
+      .json({ message: "Data Inserted Successfully", InsertDealer });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({
+      error,
+    });
+  }
 };
 
 //Dealer Get Request
-const getDealer = async (req, res) => {
-	try {
-		const readData = await Dealer.find({});
-		res.send(readData).status(200);
-	} catch (error) {
-		console.log(error);
-		res.status(400).json({
-			message: "something went wrong",
-		});
-	}
+exports.getDealer = async (req, res) => {
+  try {
+    const readData = await Dealer.find({}).populate("transactions");
+    return res.status(200).send(readData);
+  } catch (error) {
+    return res.status(400).json({
+      error,
+    });
+  }
 };
 
-module.exports = {
-	createDealer,
-	getDealer,
+exports.changeActive = async (req, res) => {
+  try {
+    const { dealerId } = req.body;
+    const dealer = await Dealer.findOne({ dealerId });
+    if (!dealer) {
+      throw "dealer doesnt exist";
+    }
+    dealer.active = !dealer.active;
+    await dealer.save();
+    return res.status(200).send(dealer);
+  } catch (e) {
+    return res.status(400).send(e);
+  }
 };

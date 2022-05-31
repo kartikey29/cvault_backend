@@ -2,24 +2,36 @@ const mongoose = require("mongoose");
 
 // Creating Dealer Schema
 const dealerSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: true,
-	},
-	phone: {
-		type: Number,
-		required: true,
-		unique: true,
-	},
-	email: {
-		type: String,
-		unique: true,
-		required: true,
-	},
-	status: {
-		type: Boolean,
-		required: true,
-	},
+  dealerId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  active: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+  transactions: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Transaction",
+    },
+  ],
 });
 
 // Dealer Model

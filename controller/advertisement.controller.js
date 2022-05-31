@@ -1,38 +1,37 @@
 const advertise = require("../models/advertisement.model");
 
 // Get Request
-const getAdvert = async (req, res) => {
-	try {
-		const fetchedData = await advertise.find({});
-		res.status(200).res.send(fetchedData);
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ message: "Server Error " });
-	}
+exports.getAdvert = async (req, res) => {
+  try {
+    const fetchedData = await advertise.find({});
+    return res.status(200).send(fetchedData);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server Error " });
+  }
 };
 
 // Post Request
-const advertLink = async (req, res) => {
-	try {
-		const bodyData = req.body.link; // put anything here later
-		const findLink = await advertise.find({ link });
-		// If found Deleting The link data
-		if (findLink == bodyData) {
-			await advertise.deleteMany({});
-		} else {
-			// if Not Found inserting the link Data
-			const insertLink = await advertise({
-				link: bodyData.link,
-			});
-			await insertLink.save();
-			res.status(201).json({
-				message: "Link Inserted Successfully",
-			});
-		}
-	} catch (error) {
-		console.log(error);
-		res.status(500).json({ message: "Server Error " });
-	}
-};
+exports.advertLink = async (req, res) => {
+  try {
+    const bodyData = req.body.link; // put anything here later
+    const findLink = await advertise.find({});
 
-module.exports = { advertLink, getAdvert };
+    // If found Deleting The link data
+    console.log(findLink.length);
+    if (findLink.length != 0) {
+      await advertise.deleteMany({});
+    }
+    // if Not Found inserting the link Data
+    const insertLink = await advertise({
+      link: bodyData,
+    });
+    await insertLink.save();
+    return res.status(201).json({
+      message: "Link Inserted Successfully",
+      insertLink,
+    });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
