@@ -4,7 +4,7 @@ const Customer = require("../models/customer.model");
 // Get Request
 exports.getCustomer = async (req, res) => {
   try {
-    const fetchCustomer = await new Customer.find({});
+    const fetchCustomer = await Customer.find({});
     return res.status(200).json({
       message: "Customer Data ",
       data: fetchCustomer,
