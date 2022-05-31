@@ -3,18 +3,15 @@ const mongoose = require("mongoose");
 module.exports = mongoose.model(
   "Transaction",
   new mongoose.Schema({
-    transactionId: {
-      type: String,
-      required: true,
-    },
-    sendersID: {
+    sender: {
       type: mongoose.Types.ObjectId,
       required: true,
       ref: "Dealer",
     },
-    receiversPhone: {
-      type: String,
+    customer: {
+      type: mongoose.Types.ObjectId,
       required: true,
+      ref: "Customer",
     },
     transactionType: {
       type: String,

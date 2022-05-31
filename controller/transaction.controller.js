@@ -1,12 +1,12 @@
 const Transaction = require("../models/transaction.model");
 const Dealer = require("../models/dealer.model");
+const Customer = require("../models/customer.model");
 
 const postTrans = async (req, res) => {
   try {
     const {
       receiversPhone,
       sendersID,
-      transactionId,
       transactionType,
       cryptoType,
       price,
@@ -19,17 +19,20 @@ const postTrans = async (req, res) => {
     if (!dealer) {
       throw "dealer doesn't exits";
     }
+    const customer = await Customer.findOne({ phone: receiversPhone });
+    if (!dealer) {
+      throw "customer is not registered";
+    }
 
     const insertTrans = await new Transaction({
-      transactionId,
       transactionType,
       cryptoType,
       price,
       costPrice,
       quantity,
-      receiversPhone,
+      customer: customer._id,
       currency,
-      sendersID: dealer._id,
+      sender: dealer._id,
     });
     await insertTrans.save();
 
@@ -48,7 +51,9 @@ const postTrans = async (req, res) => {
 const getTrans = async (req, res) => {
   try {
     const { dealerId } = req.body;
-    const fetchTrans = await Transaction.find({ dealerId });
+    const fetchTrans = await Transaction.find({ dealerId })
+      .populate("sender")
+      .populate("customer");
     return res.status(200).send(fetchTrans);
   } catch (error) {
     console.log(error);

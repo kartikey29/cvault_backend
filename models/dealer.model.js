@@ -5,6 +5,7 @@ const dealerSchema = new mongoose.Schema({
   dealerId: {
     type: String,
     required: true,
+    unique: true,
   },
   name: {
     type: String,
