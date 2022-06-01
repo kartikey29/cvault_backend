@@ -33,3 +33,17 @@ exports.postCustomer = async (req, res) => {
     return res.status(400).json({ error: "Something went worng" });
   }
 };
+
+exports.findCustomer = async (req, res) => {
+  try {
+    const { customerId } = req.body;
+    const customerData = await Customer.findOne({ customerId });
+
+    if (!customerData) {
+      throw { message: "customer doesnt exist" };
+    }
+    return res.status(200).send({ customerData });
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
