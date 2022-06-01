@@ -37,6 +37,7 @@ const dealerSchema = new mongoose.Schema({
     type: String,
     maxlength: 4,
     required: true,
+    unique: true,
   },
   transactions: [
     {
