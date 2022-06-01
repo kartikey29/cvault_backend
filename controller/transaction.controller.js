@@ -37,8 +37,10 @@ const postTrans = async (req, res) => {
     await insertTrans.save();
 
     dealer.transactions.push(insertTrans._id);
+    customer.transactions.push(insertTrans._id);
 
     await dealer.save();
+    await customer.save();
 
     return res
       .status(201)

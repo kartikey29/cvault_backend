@@ -29,5 +29,11 @@ module.exports = mongoose.model(
       required: true,
       unique: true,
     },
+    transactions: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Transaction",
+      },
+    ],
   })
 );

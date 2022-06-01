@@ -4,7 +4,13 @@ const Customer = require("../models/customer.model");
 // Get Request
 exports.getCustomer = async (req, res) => {
   try {
-    const fetchCustomer = await Customer.find({});
+    const fetchCustomer = await Customer.find({}).populate({
+      path: "transactions",
+      populate: {
+        path: "sender",
+        select: "firstName middleName lastName",
+      },
+    });
     return res.status(200).json({
       message: "Customer Data ",
       data: fetchCustomer,
@@ -37,7 +43,10 @@ exports.postCustomer = async (req, res) => {
 exports.findCustomer = async (req, res) => {
   try {
     const { customerId } = req.body;
-    const customerData = await Customer.findOne({ customerId });
+    const customerData = await Customer.findOne({ customerId }).populate({
+      path: "transactions",
+      populate: { path: "sender", select: "firstName middleName lastName" },
+    });
 
     if (!customerData) {
       throw { message: "customer doesnt exist" };

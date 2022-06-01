@@ -32,7 +32,7 @@ exports.getDealer = async (req, res) => {
   try {
     const readData = await Dealer.find({}).populate({
       path: "transactions",
-      populate: { path: "customer" },
+      populate: { path: "customer", select: "firstName middleName lastName" },
     });
 
     return res.status(200).send(readData);
@@ -65,6 +65,7 @@ exports.findDealer = async (req, res) => {
       path: "transactions",
       populate: {
         path: "customer",
+        select: "firstName middleName lastName",
       },
     });
 
