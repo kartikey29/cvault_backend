@@ -1,11 +1,21 @@
 // Dealer Module
 const Dealer = require("../models/dealer.model");
 
+const generateReferalCode = require("../helperFunction/generateReferal");
+const { find, findOne } = require("../models/dealer.model");
+
 // Dealer Post Request
 exports.createDealer = async (req, res) => {
   try {
     const { dealerId, firstName, middleName, lastName, phone, email } =
       req.body; /// put something later
+
+    const dealer = await Dealer.findOne({ dealerId });
+    if (dealer) {
+      throw { message: "dealer already exist" };
+    }
+
+    const referalCode = generateReferalCode();
 
     const InsertDealer = await new Dealer({
       dealerId,
@@ -14,6 +24,7 @@ exports.createDealer = async (req, res) => {
       lastName,
       phone,
       email,
+      referalCode,
     });
     await InsertDealer.save();
     return res
