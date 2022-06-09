@@ -20,7 +20,7 @@ const postTrans = async (req, res) => {
       throw "dealer doesn't exits";
     }
     const customer = await Customer.findOne({ phone: receiversPhone });
-    if (!dealer) {
+    if (!customer) {
       throw "customer is not registered";
     }
 
@@ -47,7 +47,7 @@ const postTrans = async (req, res) => {
       .json({ message: "Data inserted Successfully", data: insertTrans });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ error });
+    return res.status(400).send(error);
   }
 };
 const getTrans = async (req, res) => {
