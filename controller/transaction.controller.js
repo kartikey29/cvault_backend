@@ -81,4 +81,22 @@ const editTrans = async (req, res) => {
   }
 };
 
-module.exports = { postTrans, getTrans, editTrans };
+const getAllTransaction = async (req, res) => {
+  try {
+    const transactions = await Transaction.find({})
+      .populate({
+        path: "sender",
+        select: "firstName MiddleName lastName phone email active referalCode",
+      })
+      .populate({
+        path: "customer",
+        select: "firstName MiddleName lastName phone email ",
+      });
+
+    return res.status(200).send(transactions);
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
+
+module.exports = { postTrans, getTrans, editTrans, getAllTransaction };
