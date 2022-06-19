@@ -6,6 +6,7 @@ module.exports = mongoose.model(
     customerId: {
       type: String,
       required: true,
+      unique: true,
     },
     firstName: {
       type: String,
@@ -21,10 +22,18 @@ module.exports = mongoose.model(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     phone: {
       type: String,
       required: true,
+      unique: true,
     },
+    transactions: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Transaction",
+      },
+    ],
   })
 );

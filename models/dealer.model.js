@@ -5,8 +5,16 @@ const dealerSchema = new mongoose.Schema({
   dealerId: {
     type: String,
     required: true,
+    unique: true,
   },
-  name: {
+  firstName: {
+    type: String,
+    required: true,
+  },
+  middleName: {
+    type: String,
+  },
+  lastName: {
     type: String,
     required: true,
   },
@@ -24,6 +32,12 @@ const dealerSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: true,
+  },
+  referalCode: {
+    type: String,
+    maxlength: 4,
+    required: true,
+    unique: true,
   },
   transactions: [
     {
