@@ -1,8 +1,8 @@
 // Dealer Module
-const Dealer = require("../models/dealer.model");
+const Dealer = require("../models/User.model");
 
 const generateReferalCode = require("../helperFunction/generateReferal");
-const { find, findOne } = require("../models/dealer.model");
+const { find, findOne } = require("../models/User.model");
 
 // Dealer Post Request
 exports.createDealer = async (req, res) => {
