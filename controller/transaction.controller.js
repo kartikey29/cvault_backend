@@ -13,34 +13,52 @@ const postTrans = async (req, res) => {
       costPrice,
       quantity,
       currency,
+      isDealer,
     } = req.body;
 
-    const dealer = await Dealer.findOne({ sendersID });
-    if (!dealer) {
-      throw "dealer doesn't exits";
-    }
-    const customer = await Customer.findOne({ phone: receiversPhone });
-    if (!customer) {
-      throw "customer is not registered";
-    }
+    let receiverId;
+    let senderId;
 
+    if (isDealer) {
+      //when sender is a dealer
+      const dealer = await Dealer.findOne({ dealerId: sendersID });
+      if (!dealer) {
+        throw "dealer doesn't exits";
+      }
+      //finder dealer by id and get id
+      senderId = dealer._id;
+      const customer = await Customer.findOne({ phone: receiversPhone });
+      if (!customer) {
+        throw "customer is not registered";
+      }
+      // find customer by phone and insert id
+      receiverId = customer._id;
+    } else {
+      //when sender is a customer
+      const dealer = await Dealer.findOne({ phone: receiversPhone });
+      if (!dealer) {
+        throw "dealer doesn't exits";
+      }
+      //get dealer by phone and get id
+      receiverId = dealer._id;
+      const customer = await Customer.findOne({ customerId: sendersID });
+      if (!customer) {
+        throw "customer is not registered";
+      }
+      //get customer by id and get id
+      senderId = customer._id;
+    }
     const insertTrans = await new Transaction({
       transactionType,
       cryptoType,
       price,
       costPrice,
       quantity,
-      customer: customer._id,
+      receiver: receiverId,
       currency,
-      sender: dealer._id,
+      sender: senderId,
     });
     await insertTrans.save();
-
-    dealer.transactions.push(insertTrans._id);
-    customer.transactions.push(insertTrans._id);
-
-    await dealer.save();
-    await customer.save();
 
     return res
       .status(201)

@@ -2,6 +2,7 @@ const {
   getCustomer,
   postCustomer,
   findCustomer,
+  deleteCustomer,
 } = require("../controller/customer.controller");
 const customerRoute = require("express").Router();
 
@@ -12,5 +13,7 @@ customerRoute.get("/getAllCustomer", getCustomer);
 customerRoute.post("/create-customer", postCustomer);
 
 customerRoute.post("/getCustomer", findCustomer);
+
+customerRoute.delete("/deleteCustomer", deleteCustomer);
 
 module.exports = customerRoute;

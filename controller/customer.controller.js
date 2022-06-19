@@ -1,5 +1,7 @@
 // Customer Module
 const Customer = require("../models/customer.model");
+const Dealer = require("../models/dealer.model");
+const Transaction = require("../models/transaction.model");
 
 // Get Request
 exports.getCustomer = async (req, res) => {
@@ -52,6 +54,31 @@ exports.findCustomer = async (req, res) => {
       throw { message: "customer doesnt exist" };
     }
     return res.status(200).send({ customerData });
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
+
+exports.deleteCustomer = async (req, res) => {
+  try {
+    const { customerId } = req.body;
+    const deletedCustomer = await Customer.findOneAndDelete({ customerId });
+
+    const transactions = await Transaction.find({
+      customer: deletedCustomer._id,
+    });
+    await Transaction.deleteMany({
+      customer: deletedCustomer._id,
+    });
+
+    transactions.forEach(async (transaction) => {
+      const dealer = await Dealer.findById(transaction.sender);
+      dealer.transactions.filter((transId) => {
+        return transId != transaction._id;
+      });
+      dealer.save();
+    });
+    return res.send(deletedCustomer);
   } catch (e) {
     return res.status(400).send(e);
   }
