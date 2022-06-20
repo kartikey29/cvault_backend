@@ -1,5 +1,5 @@
 const Transaction = require("../models/transaction.model");
-const Dealer = require("../models/dealer.model");
+const Dealer = require("../models/User.model");
 const Customer = require("../models/customer.model");
 
 const postTrans = async (req, res) => {
