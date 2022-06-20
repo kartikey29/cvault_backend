@@ -1,9 +1,7 @@
-// Customer Module
 const User = require("../models/User.models");
-const Dealer = require("../models/User.model");
+
 const Transaction = require("../models/transaction.model");
 
-// Get Request
 // exports.getCustomer = async (req, res) => {
 //   try {
 //     const fetchCustomer = await Customer.find({}).populate({
@@ -29,13 +27,24 @@ const Transaction = require("../models/transaction.model");
  *========================**/
 exports.postCustomer = async (req, res) => {
   try {
-    const insertCustomer = await new Customer({
+    const dealer = await User.findOne({
+      referalCode: req.body.referalCode,
+      userType: "dealer",
+    });
+
+    if (!dealer) {
+      throw { message: "Enter vaild Referal Code" };
+    }
+
+    const insertCustomer = await new User({
       customerId: req.body.customerId,
       firstName: req.body.firstName,
       middleName: req.body.middleName,
       lastName: req.body.lastName,
       email: req.body.email,
       phone: req.body.phone,
+      referalCode: req.body.referalCode,
+      userType: "customer",
     });
     await insertCustomer.save();
     return res
