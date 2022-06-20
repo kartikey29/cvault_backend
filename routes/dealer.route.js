@@ -3,6 +3,7 @@ const {
   createDealer,
   changeActive,
   findDealer,
+  getDealerCustomer,
 } = require("../controller/dealer.controller");
 const dealerRoute = require("express").Router();
 
@@ -15,5 +16,7 @@ dealerRoute.post("/createDealer", createDealer);
 dealerRoute.post("/changeActive", changeActive);
 
 dealerRoute.post("/getDealer", findDealer);
+
+dealerRoute.get("/getDealerCustomer", getDealerCustomer);
 
 module.exports = dealerRoute;

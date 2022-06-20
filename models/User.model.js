@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema({
   },
   referalCode: {
     type: String,
-    unique: true,
+    // unique: true,
   },
   transactions: [
     {

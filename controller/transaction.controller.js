@@ -1,9 +1,9 @@
 const Transaction = require("../models/transaction.model");
-const Dealer = require("../models/User.model");
-const Customer = require("../models/customer.model");
+const User = require("../models/User.model");
 
 const postTrans = async (req, res) => {
   try {
+    const { _id } = req.body;
     const {
       receiversPhone,
       transactionType,
@@ -12,26 +12,30 @@ const postTrans = async (req, res) => {
       costPrice,
       quantity,
       currency,
-      isDealer,
+      senderType,
     } = req.body;
 
     let receiverId;
+    let customer;
+    let dealer;
 
-    if (isDealer) {
-      const customer = await Customer.findOne({ phone: receiversPhone });
+    if (senderType === "dealer") {
+      customer = await User.findOne({ phone: receiversPhone });
       if (!customer) {
         throw "customer is not registered";
       }
       // find customer by phone and insert id
       receiverId = customer._id;
+      dealer = await User.findById({ _id });
     } else {
       //when sender is a customer
-      const dealer = await Dealer.findOne({ phone: receiversPhone });
+      dealer = await User.findOne({ phone: receiversPhone });
       if (!dealer) {
         throw "dealer doesn't exits";
       }
       //get dealer by phone and get id
       receiverId = dealer._id;
+      customer = await User.findById({ _id });
     }
     const insertTrans = await new Transaction({
       transactionType,
@@ -41,9 +45,16 @@ const postTrans = async (req, res) => {
       quantity,
       receiver: receiverId,
       currency,
-      sender: req.user.id,
+      sender: _id,
+      senderType,
     });
     await insertTrans.save();
+
+    dealer.transactions.push(insertTrans._id);
+    customer.transactions.push(insertTrans._id);
+
+    await dealer.save();
+    await customer.save();
 
     return res
       .status(201)
@@ -56,36 +67,36 @@ const postTrans = async (req, res) => {
 
 const getTrans = async (req, res) => {
   try {
-    const _id = req.user.id; //get from frontend
+    const _id = req.body._id; //get from frontend
 
-    const fetchTrans = await Transaction.find({ senderId: _id }).populate(
-      "receiver"
-    );
+    const fetchTrans = await Transaction.find({ senderId: _id })
+      .populate("sender")
+      .populate("receiver");
 
-    return res.status(200).send({ fetchTrans, sender: req.user });
+    return res.status(200).send({ fetchTrans });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error });
   }
 };
 
-const editTrans = async (req, res) => {
-  try {
-    const update = req.body;
-    const { transactionId } = req.body;
-    if (!transactionId) {
-      throw "Send transaction ID";
-    }
-    const trans = await Transaction.findOneAndUpdate(
-      { transactionId },
-      update,
-      { returnOriginal: false }
-    );
-    return res.send({ updated: trans });
-  } catch (e) {
-    return res.status(400).send(e);
-  }
-};
+// const editTrans = async (req, res) => {
+//   try {
+//     const update = req.body;
+//     const { transactionId } = req.body;
+//     if (!transactionId) {
+//       throw "Send transaction ID";
+//     }
+//     const trans = await Transaction.findOneAndUpdate(
+//       { transactionId },
+//       update,
+//       { returnOriginal: false }
+//     );
+//     return res.send({ updated: trans });
+//   } catch (e) {
+//     return res.status(400).send(e);
+//   }
+// };
 
 const getAllTransaction = async (req, res) => {
   try {
@@ -106,4 +117,4 @@ const getAllTransaction = async (req, res) => {
   }
 };
 
-module.exports = { postTrans, getTrans, editTrans, getAllTransaction };
+module.exports = { postTrans, getTrans, getAllTransaction };
