@@ -117,4 +117,29 @@ const getAllTransaction = async (req, res) => {
   }
 };
 
-module.exports = { postTrans, getTrans, getAllTransaction };
+const deleteTrans = async (req, res) => {
+  try {
+    const { transID } = req.body;
+
+    const deletedTrans = await Transaction.findOneAndDelete({ _id: transID });
+
+    const senderData = await User.findOne({ _id: deletedTrans.sender });
+    const receiverData = await User.findOne({ _id: deletedTrans.receiver });
+
+    senderData.transactions.filter((transId) => {
+      return transId != deletedTrans._id;
+    });
+    receiverData.transactions.filter((transId) => {
+      return transId != deletedTrans._id;
+    });
+
+    await senderData.save();
+    await receiverData.save();
+
+    return res.status(200).send(deleteTrans);
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
+
+module.exports = { postTrans, getTrans, getAllTransaction, deleteTrans };

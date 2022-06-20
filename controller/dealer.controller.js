@@ -6,7 +6,7 @@ const generateReferalCode = require("../helperFunction/generateReferal");
 // Dealer Post Request
 exports.createDealer = async (req, res) => {
   try {
-    const { UID, firstName, middleName, lastName, phone, email } = req.body; /// put something later
+    const { UID, firstName, middleName, lastName, phone, email } = req.body;
 
     const dealer = await User.findOne({ UID });
     if (dealer) {
