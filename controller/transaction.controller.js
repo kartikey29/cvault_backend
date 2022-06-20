@@ -1,5 +1,6 @@
 const Transaction = require("../models/transaction.model");
 const User = require("../models/User.model");
+const mongoose = require("mongoose");
 
 const postTrans = async (req, res) => {
   try {
@@ -109,7 +110,6 @@ const getAllTransaction = async (req, res) => {
         path: "receiver",
         select: "firstName MiddleName lastName phone email active referalCode ",
       });
-    s;
 
     return res.status(200).send(transactions);
   } catch (e) {
@@ -123,20 +123,27 @@ const deleteTrans = async (req, res) => {
 
     const deletedTrans = await Transaction.findOneAndDelete({ _id: transID });
 
+    const deletedTransId = deletedTrans._id.toString();
+
     const senderData = await User.findOne({ _id: deletedTrans.sender });
     const receiverData = await User.findOne({ _id: deletedTrans.receiver });
 
-    senderData.transactions.filter((transId) => {
-      return transId != deletedTrans._id;
-    });
-    receiverData.transactions.filter((transId) => {
-      return transId != deletedTrans._id;
-    });
+    senderData.transactions = await senderData.transactions.filter(
+      (transID) => {
+        return transID != deletedTransId;
+      }
+    );
+
+    receiverData.transactions = await receiverData.transactions.filter(
+      (transID) => {
+        return transID != deletedTransId;
+      }
+    );
 
     await senderData.save();
     await receiverData.save();
 
-    return res.status(200).send(deleteTrans);
+    return res.status(200).send(deletedTrans);
   } catch (e) {
     return res.status(400).send(e);
   }

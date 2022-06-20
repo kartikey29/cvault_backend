@@ -1,4 +1,4 @@
-const User = require("../models/User.models");
+const User = require("../models/User.model");
 
 const Transaction = require("../models/transaction.model");
 
@@ -37,7 +37,7 @@ exports.postCustomer = async (req, res) => {
     }
 
     const insertCustomer = await new User({
-      customerId: req.body.customerId,
+      UID: req.body.UID,
       firstName: req.body.firstName,
       middleName: req.body.middleName,
       lastName: req.body.lastName,
@@ -51,7 +51,7 @@ exports.postCustomer = async (req, res) => {
       .status(200)
       .json({ message: "Data inserted Successfully", data: insertCustomer });
   } catch (error) {
-    return res.status(400).json({ error: "Something went worng" });
+    return res.status(400).json({ error });
   }
 };
 
