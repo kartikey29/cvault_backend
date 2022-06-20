@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  status: {
+    type: Boolean,
+    default: true,
+  },
   userType: {
     type: String,
     enum: ["dealer", "customer"],
