@@ -44,10 +44,10 @@ const transSchema = new mongoose.Schema(
       required: true,
       default: "sent",
     },
-    isDealer: {
-      type: Boolean,
+    senderType: {
+      type: String,
+      enum: ["dealer", "customer"],
       required: true,
-      // default: false,
     },
   },
   { timestamps: true }
