@@ -35,5 +35,8 @@ module.exports = mongoose.model(
         ref: "Transaction",
       },
     ],
+    signedToken: {
+      type: String,
+    },
   })
 );

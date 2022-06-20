@@ -6,7 +6,6 @@ const postTrans = async (req, res) => {
   try {
     const {
       receiversPhone,
-      sendersID,
       transactionType,
       cryptoType,
       price,
@@ -17,16 +16,8 @@ const postTrans = async (req, res) => {
     } = req.body;
 
     let receiverId;
-    let senderId;
 
     if (isDealer) {
-      //when sender is a dealer
-      const dealer = await Dealer.findOne({ dealerId: sendersID });
-      if (!dealer) {
-        throw "dealer doesn't exits";
-      }
-      //finder dealer by id and get id
-      senderId = dealer._id;
       const customer = await Customer.findOne({ phone: receiversPhone });
       if (!customer) {
         throw "customer is not registered";
@@ -41,12 +32,6 @@ const postTrans = async (req, res) => {
       }
       //get dealer by phone and get id
       receiverId = dealer._id;
-      const customer = await Customer.findOne({ customerId: sendersID });
-      if (!customer) {
-        throw "customer is not registered";
-      }
-      //get customer by id and get id
-      senderId = customer._id;
     }
     const insertTrans = await new Transaction({
       transactionType,
@@ -56,7 +41,7 @@ const postTrans = async (req, res) => {
       quantity,
       receiver: receiverId,
       currency,
-      sender: senderId,
+      sender: req.user.id,
     });
     await insertTrans.save();
 
@@ -68,13 +53,16 @@ const postTrans = async (req, res) => {
     return res.status(400).send(error);
   }
 };
+
 const getTrans = async (req, res) => {
   try {
-    const { dealerId } = req.body;
-    const fetchTrans = await Transaction.find({ dealerId })
-      .populate("sender")
-      .populate("customer");
-    return res.status(200).send(fetchTrans);
+    const _id = req.user.id; //get from frontend
+
+    const fetchTrans = await Transaction.find({ senderId: _id }).populate(
+      "receiver"
+    );
+
+    return res.status(200).send({ fetchTrans, sender: req.user });
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error });
@@ -104,12 +92,13 @@ const getAllTransaction = async (req, res) => {
     const transactions = await Transaction.find({})
       .populate({
         path: "sender",
-        select: "firstName MiddleName lastName phone email active referalCode",
+        select: "firstName MiddleName lastName phone email active referalCode ",
       })
       .populate({
-        path: "customer",
-        select: "firstName MiddleName lastName phone email ",
+        path: "receiver",
+        select: "firstName MiddleName lastName phone email active referalCode ",
       });
+    s;
 
     return res.status(200).send(transactions);
   } catch (e) {
