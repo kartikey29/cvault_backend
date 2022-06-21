@@ -6,7 +6,7 @@ const Transaction = require("../models/transaction.model");
 
 const getCustomer = async (req, res, next) => {
   try {
-    const fetchData = await User.find({});
+    const fetchData = await User.find({ userType: "customer" });
     if (!fetchData) {
       return res.status(404).json({
         success: false,
