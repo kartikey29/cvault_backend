@@ -1,6 +1,5 @@
 const Transaction = require("../models/transaction.model");
 const User = require("../models/User.model");
-const mongoose = require("mongoose");
 
 const postTrans = async (req, res) => {
   try {
