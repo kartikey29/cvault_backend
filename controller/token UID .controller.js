@@ -32,28 +32,32 @@ const verifyUID = async (req, res, next) => {
 /*==== Delete token when Logout  ====*/
 
 const deleteToken = async (req, res, next) => {
-	const UID = req.body; // from Frontend
-	const check = await User.findOne({ UID });
-	if (!check) {
-		return res.status(404).json({
-			success: false,
-			error: "User not Found",
-			data: [],
-		});
-	} else {
-		await User.findOne(
-			{ _id: check._id },
-			{
-				$set: {
-					token: "",
+	try {
+		const UID = req.body; // from Frontend
+		const check = await User.findOne({ UID });
+		if (!check) {
+			return res.status(404).json({
+				success: false,
+				error: "User not Found",
+				data: [],
+			});
+		} else {
+			await User.findOne(
+				{ _id: check._id },
+				{
+					$set: {
+						token: "",
+					},
 				},
-			},
-		);
-		return res.status(200).json({
-			success: true,
-			message: "User Successfully Logout",
-			data: null,
-		});
+			);
+			return res.status(200).json({
+				success: true,
+				message: "User Successfully Logout",
+				data: null,
+			});
+		}
+	} catch (error) {
+		return res.status(500).json({ error: "Server is not responding " });
 	}
 };
 
