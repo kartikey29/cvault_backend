@@ -3,7 +3,7 @@ const User = require("../models/User.model");
 
 const postTrans = async (req, res) => {
   try {
-    const { _id } = req.body;
+    const { _id } = req.body; //sender id
     const {
       receiversPhone,
       transactionType,
@@ -12,49 +12,36 @@ const postTrans = async (req, res) => {
       costPrice,
       quantity,
       currency,
-      senderType,
     } = req.body;
 
-    let receiverId;
-    let customer;
-    let dealer;
-
-    if (senderType === "dealer") {
-      customer = await User.findOne({ phone: receiversPhone });
-      if (!customer) {
-        throw "customer is not registered";
-      }
-      // find customer by phone and insert id
-      receiverId = customer._id;
-      dealer = await User.findById({ _id });
-    } else {
-      //when sender is a customer
-      dealer = await User.findOne({ phone: receiversPhone });
-      if (!dealer) {
-        throw "dealer doesn't exits";
-      }
-      //get dealer by phone and get id
-      receiverId = dealer._id;
-      customer = await User.findById({ _id });
+    const recieverData = await User.findOne({ phone: receiversPhone });
+    if (!recieverData) {
+      throw { message: "Reciever with this phone doesn't exist" };
     }
+
+    const senderData = await User.findById(_id);
+    if (!senderData) {
+      throw { message: "Sender with this id doesnt exist" };
+    }
+
     const insertTrans = await new Transaction({
       transactionType,
       cryptoType,
       price,
       costPrice,
       quantity,
-      receiver: receiverId,
+      receiver: recieverData._id,
       currency,
-      sender: _id,
-      senderType,
+      sender: senderData._id,
+      senderType: senderData.userType,
     });
     await insertTrans.save();
 
-    dealer.transactions.push(insertTrans._id);
-    customer.transactions.push(insertTrans._id);
+    recieverData.transactions.push(insertTrans._id);
+    senderData.transactions.push(insertTrans._id);
 
-    await dealer.save();
-    await customer.save();
+    await recieverData.save();
+    await senderData.save();
 
     return res
       .status(201)
