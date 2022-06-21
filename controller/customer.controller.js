@@ -2,30 +2,32 @@ const User = require("../models/User.model");
 
 const Transaction = require("../models/transaction.model");
 
-// exports.getCustomer = async (req, res) => {
-//   try {
-//     const fetchCustomer = await Customer.find({}).populate({
-//       path: "transactions",
-//       populate: {
-//         path: "sender",
-//         select: "firstName middleName lastName",
-//       },
-//     });
-//     return res.status(200).json({
-//       message: "Customer Data ",
-//       data: fetchCustomer,
-//     });
-//   } catch (error) {
-//     return res.status(400).json({ error: "Something went worng" });
-//   }
-// };
+/*==== Get Customers ====*/
 
-// Post Request
+const getCustomer = async (req, res, next) => {
+  try {
+    const fetchData = await User.find({});
+    if (!fetchData) {
+      return res.status(404).json({
+        success: false,
+        error: "User Not Found",
+        data: [],
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "User Fetched SuccessFully",
+        data: [fetchData],
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({ error: "Server is not responding " });
+  }
+};
 
-/**=======================
- *     jj
- *========================**/
-exports.postCustomer = async (req, res) => {
+/*==== Create Customers ====*/
+
+const postCustomer = async (req, res) => {
   try {
     const dealer = await User.findOne({
       referalCode: req.body.referalCode,
@@ -90,9 +92,13 @@ exports.postCustomer = async (req, res) => {
 //         return transId != transaction._id;
 //       });
 //       dealer.save();
+//   }
+// };
 //     });
 //     return res.send(deletedCustomer);
 //   } catch (e) {
 //     return res.status(400).send(e);
 //   }
 // };
+
+module.exports = { getCustomer, postCustomer };
