@@ -40,9 +40,12 @@ exports.createDealer = async (req, res) => {
 //Dealer Get Request
 exports.getDealer = async (req, res) => {
   try {
-    const readData = await Dealer.find({}).populate({
+    const readData = await User.find({ userType: "dealer" }).populate({
       path: "transactions",
-      populate: { path: "receiver", select: "firstName middleName lastName" },
+      populate: [
+        { path: "receiver", select: "firstName middleName lastName" },
+        { path: "sender", select: "firstName middleName lastName" },
+      ],
     });
     return res.status(200).send(readData);
   } catch (error) {
@@ -72,10 +75,10 @@ exports.findDealer = async (req, res) => {
     const { UID } = req.body;
     const dealerData = await User.findOne({ UID }).populate({
       path: "transactions",
-      populate: {
-        path: "receiver",
-        select: "firstName middleName lastName",
-      },
+      populate: [
+        { path: "receiver", select: "firstName middleName lastName" },
+        { path: "sender", select: "firstName middleName lastName" },
+      ],
     });
 
     if (!dealerData) {
