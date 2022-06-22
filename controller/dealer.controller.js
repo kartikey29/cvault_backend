@@ -108,3 +108,39 @@ exports.getDealerCustomer = async (req, res) => {
     return res.status(400).send(e);
   }
 };
+
+exports.setDealerMargin = async (req, res) => {
+  try {
+    const { _id, margin } = req.body;
+
+    const dealerData = await User.findOne({ _id, userType: "dealer" });
+
+    if (!dealerData) {
+      throw { message: "dealer doesnt exist" };
+    }
+
+    dealerData.margin = margin;
+
+    await dealerData.save();
+
+    return res.send(dealerData);
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
+
+exports.getDealerMargin = async (req, res) => {
+  try {
+    const { referal } = req.body;
+    const dealerData = await User.findOne({
+      referalCode: referal,
+      userType: "dealer",
+    });
+    if (!dealerData) {
+      throw { message: "dealer doesnt exist" };
+    }
+    return res.send({ margin: dealerData.margin });
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};

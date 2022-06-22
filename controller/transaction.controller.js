@@ -67,7 +67,7 @@ const getTrans = async (req, res) => {
         select: "firstName MiddleName lastName phone email active referalCode ",
       });
 
-    return res.status(200).send({ fetchTrans });
+    return res.status(200).send(fetchTrans);
   } catch (error) {
     console.log(error);
     return res.status(400).json({ error });
