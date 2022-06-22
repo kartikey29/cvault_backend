@@ -1,7 +1,7 @@
 const authMiddleware = require("../middleware/middleware").verifyToken;
 
 const {
-  getDealer,
+  getAllDealer,
   createDealer,
   changeActive,
   findDealer,
@@ -12,7 +12,7 @@ const {
 const dealerRoute = require("express").Router();
 
 /* GET Dealers  */
-dealerRoute.get("/getAllDealer", getDealer);
+dealerRoute.get("/getAllDealer", getAllDealer);
 
 /* Create Dealers  */
 dealerRoute.post("/createDealer", createDealer);

@@ -38,7 +38,7 @@ exports.createDealer = async (req, res) => {
 };
 
 //Dealer Get Request
-exports.getDealer = async (req, res) => {
+exports.getAllDealer = async (req, res) => {
   try {
     const readData = await User.find({ userType: "dealer" }).populate({
       path: "transactions",
