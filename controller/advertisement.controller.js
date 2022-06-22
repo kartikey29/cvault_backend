@@ -35,3 +35,12 @@ exports.advertLink = async (req, res) => {
     return res.status(500).json({ error });
   }
 };
+
+exports.deleteAdvert = async (req, res) => {
+  try {
+    await advertise.deleteMany({});
+    return res.status(200).send({ message: "Ad removed Successfully" });
+  } catch (e) {
+    return res.status(500).send(e);
+  }
+};

@@ -1,30 +1,29 @@
 // Dealer Module
-const Dealer = require("../models/dealer.model");
+const User = require("../models/User.model");
 
 const generateReferalCode = require("../helperFunction/generateReferal");
-const { find, findOne } = require("../models/dealer.model");
 
 // Dealer Post Request
 exports.createDealer = async (req, res) => {
   try {
-    const { dealerId, firstName, middleName, lastName, phone, email } =
-      req.body; /// put something later
+    const { UID, firstName, middleName, lastName, phone, email } = req.body;
 
-    const dealer = await Dealer.findOne({ dealerId });
+    const dealer = await User.findOne({ UID });
     if (dealer) {
       throw { message: "dealer already exist" };
     }
 
     const referalCode = generateReferalCode();
 
-    const InsertDealer = await new Dealer({
-      dealerId,
+    const InsertDealer = await new User({
+      UID,
       firstName,
       middleName,
       lastName,
       phone,
       email,
       referalCode,
+      userType: "dealer",
     });
     await InsertDealer.save();
     return res
@@ -41,11 +40,13 @@ exports.createDealer = async (req, res) => {
 //Dealer Get Request
 exports.getDealer = async (req, res) => {
   try {
-    const readData = await Dealer.find({}).populate({
+    const readData = await User.find({ userType: "dealer" }).populate({
       path: "transactions",
-      populate: { path: "customer", select: "firstName middleName lastName" },
+      populate: [
+        { path: "receiver", select: "firstName middleName lastName" },
+        { path: "sender", select: "firstName middleName lastName" },
+      ],
     });
-
     return res.status(200).send(readData);
   } catch (error) {
     return res.status(400).json({
@@ -56,8 +57,8 @@ exports.getDealer = async (req, res) => {
 
 exports.changeActive = async (req, res) => {
   try {
-    const { dealerId } = req.body;
-    const dealer = await Dealer.findOne({ dealerId });
+    const { UID } = req.body;
+    const dealer = await User.findOne({ UID });
     if (!dealer) {
       throw "dealer doesnt exist";
     }
@@ -71,19 +72,36 @@ exports.changeActive = async (req, res) => {
 
 exports.findDealer = async (req, res) => {
   try {
-    const { dealerId } = req.body;
-    const dealerData = await Dealer.findOne({ dealerId }).populate({
+    const { UID } = req.body;
+    const dealerData = await User.findOne({ UID }).populate({
       path: "transactions",
-      populate: {
-        path: "customer",
-        select: "firstName middleName lastName",
-      },
+      populate: [
+        { path: "receiver", select: "firstName middleName lastName" },
+        { path: "sender", select: "firstName middleName lastName" },
+      ],
     });
 
     if (!dealerData) {
       throw { message: "dealer doesnt exist" };
     }
     return res.status(200).send({ dealerData });
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
+
+exports.getDealerCustomer = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    const dealerData = await User.findById({ _id });
+    const referal = dealerData.referalCode;
+
+    const CustomerData = await User.find({
+      referalCode: referal,
+      userType: "customer",
+    });
+
+    return res.status(200).send(CustomerData);
   } catch (e) {
     return res.status(400).send(e);
   }

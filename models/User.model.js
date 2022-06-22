@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
-// Creating Dealer Schema
-const dealerSchema = new mongoose.Schema({
-  dealerId: {
+// Creating User Schema
+const userSchema = new mongoose.Schema({
+  UID: {
     type: String,
     required: true,
     unique: true,
@@ -28,16 +28,21 @@ const dealerSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  status: {
+    type: Boolean,
+    default: true,
+  },
+  userType: {
+    type: String,
+    enum: ["dealer", "customer"],
+    required: true,
+  },
   active: {
     type: Boolean,
-    required: true,
-    default: true,
   },
   referalCode: {
     type: String,
-    maxlength: 4,
-    required: true,
-    unique: true,
+    // unique: true,
   },
   transactions: [
     {
@@ -47,7 +52,7 @@ const dealerSchema = new mongoose.Schema({
   ],
 });
 
-// Dealer Model
-const Dealer = mongoose.model("Dealer", dealerSchema);
+// User Model
+const User = mongoose.model("User", userSchema);
 
-module.exports = Dealer;
+module.exports = User;
