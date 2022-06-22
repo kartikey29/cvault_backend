@@ -1,4 +1,5 @@
 const adminRoute = require("express").Router();
+const authMiddleWare = require("../middleware/middleware").verifyToken;
 
 const {
   setAdminMargin,
@@ -6,9 +7,9 @@ const {
   getAdminMargin,
 } = require("../controller/admin.controller");
 
-adminRoute.post("/setMargin", setAdminMargin);
+adminRoute.post("/setMargin", authMiddleWare, setAdminMargin);
 
-adminRoute.get("/getAdminData", getAdminData);
+adminRoute.get("/getAdminData", authMiddleWare, getAdminData);
 
 adminRoute.get("/getMargin", getAdminMargin);
 module.exports = adminRoute;

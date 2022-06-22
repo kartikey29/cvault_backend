@@ -12,7 +12,7 @@ exports.getAdminData = async (req, res) => {
     });
 
     if (!adminData) {
-      throw { message: "dealer doesnt exist" };
+      throw { message: "admin doesnt exist" };
     }
     return res.status(200).send({ adminData });
   } catch (e) {
