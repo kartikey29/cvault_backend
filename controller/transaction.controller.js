@@ -1,6 +1,8 @@
 const Transaction = require("../models/transaction.model");
 const User = require("../models/User.model");
 
+const getPaginationOptions = require("../helperFunction/getTransPaginationOptions");
+
 const postTrans = async (req, res) => {
   try {
     const { _id } = req.body; //sender id
@@ -56,16 +58,10 @@ const postTrans = async (req, res) => {
 const getTrans = async (req, res) => {
   try {
     const _id = req.body._id; //get from frontend
+    const { page } = req.query;
+    const options = getPaginationOptions(page);
 
-    const fetchTrans = await Transaction.find({ senderId: _id })
-      .populate({
-        path: "sender",
-        select: "firstName MiddleName lastName phone email active referalCode ",
-      })
-      .populate({
-        path: "receiver",
-        select: "firstName MiddleName lastName phone email active referalCode ",
-      });
+    const fetchTrans = await Transaction.paginate({ senderId: _id }, options);
 
     return res.status(200).send(fetchTrans);
   } catch (error) {
@@ -94,15 +90,9 @@ const getTrans = async (req, res) => {
 
 const getAllTransaction = async (req, res) => {
   try {
-    const transactions = await Transaction.find({})
-      .populate({
-        path: "sender",
-        select: "firstName MiddleName lastName phone email active referalCode ",
-      })
-      .populate({
-        path: "receiver",
-        select: "firstName MiddleName lastName phone email active referalCode ",
-      });
+    const { page } = req.query;
+    const options = getPaginationOptions(page);
+    const transactions = await Transaction.paginate({}, options);
 
     return res.status(200).send(transactions);
   } catch (e) {
