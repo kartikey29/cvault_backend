@@ -40,13 +40,15 @@ exports.createDealer = async (req, res) => {
 //Dealer Get Request
 exports.getAllDealer = async (req, res) => {
   try {
-    const readData = await User.find({ userType: "dealer" }).populate({
-      path: "transactions",
-      populate: [
-        { path: "receiver", select: "firstName middleName lastName" },
-        { path: "sender", select: "firstName middleName lastName" },
-      ],
-    });
+    const readData = await User.find({ userType: "dealer" })
+      .populate({
+        path: "transactions",
+        populate: [
+          { path: "receiver", select: "firstName middleName lastName" },
+          { path: "sender", select: "firstName middleName lastName" },
+        ],
+      })
+      .select("-token -status");
     return res.status(200).send(readData);
   } catch (error) {
     return res.status(400).json({
@@ -73,15 +75,15 @@ exports.changeActive = async (req, res) => {
 exports.findDealer = async (req, res) => {
   try {
     const { _id } = req.body;
-    const dealerData = await User.findOne({ _id, userType: "dealer" }).populate(
-      {
+    const dealerData = await User.findOne({ _id, userType: "dealer" })
+      .populate({
         path: "transactions",
         populate: [
           { path: "receiver", select: "firstName middleName lastName" },
           { path: "sender", select: "firstName middleName lastName" },
         ],
-      }
-    );
+      })
+      .select("-token -status");
 
     if (!dealerData) {
       throw { message: "dealer doesnt exist" };
@@ -101,7 +103,7 @@ exports.getDealerCustomer = async (req, res) => {
     const CustomerData = await User.find({
       referalCode: referal,
       userType: "customer",
-    });
+    }).select("-token -status");
 
     return res.status(200).send(CustomerData);
   } catch (e) {

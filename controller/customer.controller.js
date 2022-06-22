@@ -4,24 +4,18 @@ const Transaction = require("../models/transaction.model");
 
 /*==== Get Customers ====*/
 
-const getCustomer = async (req, res, next) => {
+const getAllCustomer = async (req, res, next) => {
   try {
-    const fetchData = await User.find({ userType: "customer" });
+    const fetchData = await User.find({ userType: "customer" }).select(
+      "-token -status"
+    );
     if (!fetchData) {
-      return res.status(404).json({
-        success: false,
-        error: "User Not Found",
-        data: [],
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "User Fetched SuccessFully",
-        data: [fetchData],
-      });
+      throw { message: "no customer" };
     }
+
+    return res.send(fetchData);
   } catch (error) {
-    return res.status(500).json({ error: "Server is not responding " });
+    return res.status(500).json(error);
   }
 };
 
@@ -63,13 +57,15 @@ const findCustomer = async (req, res) => {
     const customerData = await User.findOne({
       _id,
       userType: "customer",
-    }).populate({
-      path: "transactions",
-      populate: [
-        { path: "receiver", select: "firstName middleName lastName" },
-        { path: "sender", select: "firstName middleName lastName" },
-      ],
-    });
+    })
+      .populate({
+        path: "transactions",
+        populate: [
+          { path: "receiver", select: "firstName middleName lastName" },
+          { path: "sender", select: "firstName middleName lastName" },
+        ],
+      })
+      .select("-token -status");
 
     if (!customerData) {
       throw { message: "customer doesnt exist" };
@@ -107,4 +103,4 @@ const findCustomer = async (req, res) => {
 //   }
 // };
 
-module.exports = { getCustomer, postCustomer, findCustomer };
+module.exports = { getAllCustomer, postCustomer, findCustomer };

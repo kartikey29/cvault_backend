@@ -1,14 +1,14 @@
 const customerRoute = require("express").Router();
 const authMiddleware = require("../middleware/middleware").verifyToken;
 const {
-  getCustomer,
+  getAllCustomer,
   postCustomer,
   findCustomer,
   deleteCustomer,
 } = require("../controller/customer.controller");
 
 /* GET Customer  */
-customerRoute.get("/getAllCustomer", getCustomer);
+customerRoute.get("/getAllCustomer", getAllCustomer);
 
 /* POST Customer  */
 customerRoute.post("/create-customer", postCustomer);
