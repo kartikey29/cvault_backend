@@ -1,3 +1,5 @@
+const authMiddleware = require("../middleware/middleware").verifyToken;
+
 const {
   getDealer,
   createDealer,
@@ -15,8 +17,8 @@ dealerRoute.post("/createDealer", createDealer);
 
 dealerRoute.post("/changeActive", changeActive);
 
-dealerRoute.post("/getDealer", findDealer);
+dealerRoute.get("/getDealer", authMiddleware, findDealer);
 
-dealerRoute.get("/getDealerCustomer", getDealerCustomer);
+dealerRoute.get("/getDealerCustomer", authMiddleware, getDealerCustomer);
 
 module.exports = dealerRoute;

@@ -1,4 +1,6 @@
 var express = require("express");
+const authMiddleware = require("../middleware/middleware").verifyToken;
+
 var transactionRoute = express.Router();
 const {
   postTrans,
@@ -9,10 +11,10 @@ const {
 } = require("../controller/transaction.controller");
 
 /* POST Transaction page. */
-transactionRoute.post("/post-transaction", postTrans);
+transactionRoute.post("/post-transaction", authMiddleware, postTrans);
 
 /* GET Transaction page. */
-transactionRoute.post("/get-transaction", getTrans);
+transactionRoute.get("/get-transaction", authMiddleware, getTrans);
 
 // transactionRoute.post("/edit-trans", editTrans);
 

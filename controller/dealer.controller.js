@@ -72,14 +72,16 @@ exports.changeActive = async (req, res) => {
 
 exports.findDealer = async (req, res) => {
   try {
-    const { UID } = req.body;
-    const dealerData = await User.findOne({ UID }).populate({
-      path: "transactions",
-      populate: [
-        { path: "receiver", select: "firstName middleName lastName" },
-        { path: "sender", select: "firstName middleName lastName" },
-      ],
-    });
+    const { _id } = req.body;
+    const dealerData = await User.findOne({ _id, userType: "dealer" }).populate(
+      {
+        path: "transactions",
+        populate: [
+          { path: "receiver", select: "firstName middleName lastName" },
+          { path: "sender", select: "firstName middleName lastName" },
+        ],
+      }
+    );
 
     if (!dealerData) {
       throw { message: "dealer doesnt exist" };

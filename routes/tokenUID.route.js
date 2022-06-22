@@ -1,7 +1,13 @@
 const uidRoute = require("express").Router();
-const verifyUID = require("../controller/token UID .controller");
+const {
+  verifyUID,
+  deleteToken,
+} = require("../controller/token UID .controller");
 
-// get Token
-uidRoute.get("/token", verifyUID);
+//  Token when SiognIN
+uidRoute.post("/token-login", verifyUID);
+
+// Remove token when LOGout
+uidRoute.post("/token-logout", deleteToken);
 
 module.exports = uidRoute;
