@@ -2,7 +2,7 @@
  *!    Importing Files
  *========================**/
 const { JWTKEY } = process.env;
-const { User } = require("../models/User.model");
+const User = require("../models/User.model");
 const jwt = require("jsonwebtoken");
 
 /**========================================================================

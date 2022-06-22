@@ -4,6 +4,7 @@ const User = require("../models/User.model");
 const postTrans = async (req, res) => {
   try {
     const { _id } = req.body; //sender id
+    console.log(_id);
     const {
       receiversPhone,
       transactionType,
@@ -57,8 +58,14 @@ const getTrans = async (req, res) => {
     const _id = req.body._id; //get from frontend
 
     const fetchTrans = await Transaction.find({ senderId: _id })
-      .populate("sender")
-      .populate("receiver");
+      .populate({
+        path: "sender",
+        select: "firstName MiddleName lastName phone email active referalCode ",
+      })
+      .populate({
+        path: "receiver",
+        select: "firstName MiddleName lastName phone email active referalCode ",
+      });
 
     return res.status(200).send({ fetchTrans });
   } catch (error) {

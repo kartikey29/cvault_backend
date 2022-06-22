@@ -57,22 +57,28 @@ const postCustomer = async (req, res) => {
   }
 };
 
-// exports.findCustomer = async (req, res) => {
-//   try {
-//     const { customerId } = req.body;
-//     const customerData = await Customer.findOne({ customerId }).populate({
-//       path: "transactions",
-//       populate: { path: "sender", select: "firstName middleName lastName" },
-//     });
+const findCustomer = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    const customerData = await User.findOne({
+      _id,
+      userType: "customer",
+    }).populate({
+      path: "transactions",
+      populate: [
+        { path: "receiver", select: "firstName middleName lastName" },
+        { path: "sender", select: "firstName middleName lastName" },
+      ],
+    });
 
-//     if (!customerData) {
-//       throw { message: "customer doesnt exist" };
-//     }
-//     return res.status(200).send({ customerData });
-//   } catch (e) {
-//     return res.status(400).send(e);
-//   }
-// };
+    if (!customerData) {
+      throw { message: "customer doesnt exist" };
+    }
+    return res.status(200).send({ customerData });
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
 
 // exports.deleteCustomer = async (req, res) => {
 //   try {
@@ -101,4 +107,4 @@ const postCustomer = async (req, res) => {
 //   }
 // };
 
-module.exports = { getCustomer, postCustomer };
+module.exports = { getCustomer, postCustomer, findCustomer };
