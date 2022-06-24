@@ -5,8 +5,16 @@ const getOptions = (page) => {
     populate: {
       path: "transactions",
       populate: [
-        { path: "receiver", select: "firstName middleName lastName" },
-        { path: "sender", select: "firstName middleName lastName" },
+        {
+          path: "receiver",
+          select:
+            "firstName MiddleName lastName phone email active referalCode userType",
+        },
+        {
+          path: "sender",
+          select:
+            "firstName MiddleName lastName phone email active referalCode userType",
+        },
       ],
     },
     select: "-token -status",
