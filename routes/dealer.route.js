@@ -8,6 +8,7 @@ const {
   getDealerCustomer,
   setDealerMargin,
   getDealerMargin,
+  patchEditDealer,
 } = require("../controller/dealer.controller");
 const dealerRoute = require("express").Router();
 
@@ -26,4 +27,7 @@ dealerRoute.get("/getDealerCustomer", authMiddleware, getDealerCustomer);
 dealerRoute.post("/setDealerMargin", authMiddleware, setDealerMargin);
 
 dealerRoute.post("/getDealerMargin", getDealerMargin);
+
+dealerRoute.patch("/editProfile", authMiddleware ,patchEditDealer)
+
 module.exports = dealerRoute;
