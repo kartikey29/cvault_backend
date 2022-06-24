@@ -146,3 +146,17 @@ exports.getDealerMargin = async (req, res) => {
     return res.status(400).send(e);
   }
 };
+
+exports.patchEditDealer = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    delete req.body._id
+    const dealer = await User.findByIdAndUpdate(_id, req.body, { returnOriginal: false })
+    if (!dealer) {
+      throw { message: "customer or dealer doesnt exist" };
+    }
+    return res.status(200).send(dealer)
+  } catch (e) {
+    return res.status(400).send(e)
+  }
+}
