@@ -27,6 +27,17 @@ const postTrans = async (req, res) => {
       throw { message: "Sender with this id doesnt exist" };
     }
 
+    if (recieverData.userType === senderData.userType) {
+      throw {
+        message:
+          "cannot create trans from dealer to dealer OR customer to customer",
+      };
+    }
+
+    if (senderData.userType === "admin" || recieverData === "admin") {
+      throw { message: "sender or reciever is admin" };
+    }
+
     const insertTrans = await new Transaction({
       transactionType,
       cryptoType,
@@ -132,4 +143,40 @@ const deleteTrans = async (req, res) => {
   }
 };
 
-module.exports = { postTrans, getTrans, getAllTransaction, deleteTrans };
+const changeTransactionStatus = async (req, res) => {
+  try {
+    const { _id, status, transID } = req.body;
+
+    const userData = await User.findById(_id);
+
+    const transData = await Transaction.findById(transID);
+
+    const tranSender = transData.senderType;
+    const userType = userData.userType;
+
+    if (userType === "customer") {
+      throw { message: "customer cannot change trans status" };
+    }
+
+    if (tranSender === "dealer" && userType === "dealer") {
+      throw {
+        message: "dealer cannot edit transactions with senderType dealer",
+      };
+    }
+    transData.status = status;
+
+    await transData.save();
+
+    return res.status(200).send({ message: "updated status", transData });
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
+
+module.exports = {
+  postTrans,
+  getTrans,
+  getAllTransaction,
+  deleteTrans,
+  changeTransactionStatus,
+};

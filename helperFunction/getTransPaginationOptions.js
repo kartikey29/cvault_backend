@@ -5,11 +5,13 @@ const getOptions = (page) => {
     populate: [
       {
         path: "sender",
-        select: "firstName MiddleName lastName phone email active referalCode ",
+        select:
+          "firstName MiddleName lastName phone email active referalCode userType",
       },
       {
         path: "receiver",
-        select: "firstName MiddleName lastName phone email active referalCode ",
+        select:
+          "firstName MiddleName lastName phone email active referalCode userType",
       },
     ],
   };

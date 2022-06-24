@@ -1,19 +1,24 @@
 const User = require("../models/User.model");
-
 const Transaction = require("../models/transaction.model");
+const CustomerPaginateOptions = require("../helperFunction/dealerCustomerPaginateOptions");
 
 /*==== Get Customers ====*/
 
 const getAllCustomer = async (req, res, next) => {
   try {
-    const fetchData = await User.find({ userType: "customer" }).select(
-      "-token -status"
-    );
-    if (!fetchData) {
+    // const fetchData = await User.find({ userType: "customer" }).select(
+    //   "-token -status"
+    // );
+    const { page } = req.query;
+
+    const options = CustomerPaginateOptions(page);
+
+    const customerData = await User.paginate({ userType: "customer" }, options);
+    if (!customerData) {
       throw { message: "no customer" };
     }
 
-    return res.send(fetchData);
+    return res.send(customerData);
   } catch (error) {
     return res.status(500).json(error);
   }

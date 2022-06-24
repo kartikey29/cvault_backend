@@ -42,7 +42,7 @@ const transSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["accepted", "cancelled", "expired", "sent"],
+      enum: ["accepted", "rejected", "expired", "sent"],
       required: true,
       default: "sent",
     },

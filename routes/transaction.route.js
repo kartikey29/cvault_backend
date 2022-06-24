@@ -8,6 +8,7 @@ const {
   // editTrans,
   getAllTransaction,
   deleteTrans,
+  changeTransactionStatus,
 } = require("../controller/transaction.controller");
 
 /* POST Transaction page. */
@@ -21,5 +22,11 @@ transactionRoute.get("/get-transaction", authMiddleware, getTrans);
 transactionRoute.get("/getAllTransaction", getAllTransaction);
 
 transactionRoute.delete("/deleteTrans", deleteTrans);
+
+transactionRoute.patch(
+  "/changeStatus",
+  authMiddleware,
+  changeTransactionStatus
+);
 
 module.exports = transactionRoute;

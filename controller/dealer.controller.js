@@ -3,6 +3,8 @@ const User = require("../models/User.model");
 
 const generateReferalCode = require("../helperFunction/generateReferal");
 
+const dealerPaginateOptions = require("../helperFunction/dealerCustomerPaginateOptions");
+
 // Dealer Post Request
 exports.createDealer = async (req, res) => {
   try {
@@ -40,16 +42,12 @@ exports.createDealer = async (req, res) => {
 //Dealer Get Request
 exports.getAllDealer = async (req, res) => {
   try {
-    const readData = await User.find({ userType: "dealer" })
-      .populate({
-        path: "transactions",
-        populate: [
-          { path: "receiver", select: "firstName middleName lastName" },
-          { path: "sender", select: "firstName middleName lastName" },
-        ],
-      })
-      .select("-token -status");
-    return res.status(200).send(readData);
+    const { page } = req.query;
+    const options = dealerPaginateOptions(page);
+
+    const dealerData = await User.paginate({ userType: "dealer" }, options);
+
+    return res.status(200).send(dealerData);
   } catch (error) {
     return res.status(400).json({
       error,
