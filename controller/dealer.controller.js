@@ -148,22 +148,23 @@ exports.getDealerMargin = async (req, res) => {
 exports.patchEditDealer = async (req, res) => {
   try {
     const { _id } = req.body;
-    delete req.body._id
 
-    delete req.body.userType
-    delete req.body.token
-    delete req.body.referalCode
-    delete req.body.margin
-    delete req.body.status
+    delete req.body._id;
+    delete req.body.userType;
+    delete req.body.token;
+    delete req.body.referalCode;
+    delete req.body.margin;
+    delete req.body.status;
 
-    const dealer = await User.findByIdAndUpdate(_id, req.body, { returnOriginal: false })
+    const dealer = await User.findByIdAndUpdate(_id, req.body, {
+      returnOriginal: false,
+    }).select("-token -margin -transactions -status");
     if (!dealer) {
       throw { message: "customer or dealer doesnt exist" };
     }
 
-    delete dealer.token
-    return res.status(200).send(dealer)
+    return res.status(200).send(dealer);
   } catch (e) {
-    return res.status(400).send(e)
+    return res.status(400).send(e);
   }
-}
+};
