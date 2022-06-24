@@ -132,4 +132,12 @@ const deleteTrans = async (req, res) => {
   }
 };
 
+const changeTransactionStatus = async (req, res) => {
+  try {
+    const { _id } = req.body;
+  } catch (e) {
+    return res.status(400).send(e);
+  }
+};
+
 module.exports = { postTrans, getTrans, getAllTransaction, deleteTrans };
