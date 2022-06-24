@@ -28,6 +28,6 @@ dealerRoute.post("/setDealerMargin", authMiddleware, setDealerMargin);
 
 dealerRoute.post("/getDealerMargin", getDealerMargin);
 
-dealerRoute.patch("/edit-dealer", patchEditDealer)
+dealerRoute.patch("/editProfile", authMiddleware ,patchEditDealer)
 
 module.exports = dealerRoute;
