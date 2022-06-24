@@ -5,6 +5,8 @@ const generateReferalCode = require("../helperFunction/generateReferal");
 
 const dealerPaginateOptions = require("../helperFunction/dealerCustomerPaginateOptions");
 
+const _ = require("lodash");
+
 // Dealer Post Request
 exports.createDealer = async (req, res) => {
   try {
@@ -149,14 +151,18 @@ exports.patchEditDealer = async (req, res) => {
   try {
     const { _id } = req.body;
 
-    delete req.body._id;
-    delete req.body.userType;
-    delete req.body.token;
-    delete req.body.referalCode;
-    delete req.body.margin;
-    delete req.body.status;
+    const fieldsToDelete = [
+      "_id",
+      "userType",
+      "token",
+      "referalCode",
+      "margin",
+      "status",
+      "UID",
+    ];
+    const updateFields = _.omit(req.body, fieldsToDelete);
 
-    const dealer = await User.findByIdAndUpdate(_id, req.body, {
+    const dealer = await User.findByIdAndUpdate(_id, updateFields, {
       returnOriginal: false,
     }).select("-token -margin -transactions -status");
     if (!dealer) {
