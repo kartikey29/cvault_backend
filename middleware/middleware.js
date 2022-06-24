@@ -13,7 +13,7 @@ exports.verifyToken = async (req, res, next) => {
     const header = req.header("Authorization");
     if (header === undefined) {
       return res.status(400).json({
-        sucess: false,
+        success: false,
         message: "Unauthorized Request!",
         data: [],
       });
@@ -22,7 +22,7 @@ exports.verifyToken = async (req, res, next) => {
       jwt.verify(token, JWTKEY, async (err, decoded) => {
         if (err) {
           return res.status(400).json({
-            sucess: false,
+            success: false,
             message: err.message,
             data: [],
           });
@@ -30,7 +30,7 @@ exports.verifyToken = async (req, res, next) => {
           const _id = decoded._id;
           if (!_id) {
             res.status(400).json({
-              sucess: false,
+              success: false,
               error: "Authentication Failed ",
               data: [],
             });
@@ -38,7 +38,7 @@ exports.verifyToken = async (req, res, next) => {
             const checkUser = await User.findOne({ signedToken: token, _id });
             if (!checkUser) {
               res.status(400).json({
-                sucess: false,
+                success: false,
                 error: "Authentication Failed ",
                 data: [],
               });
