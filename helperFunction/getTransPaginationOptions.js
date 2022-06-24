@@ -2,6 +2,9 @@ const getOptions = (page) => {
   const options = {
     limit: 20,
     page: page,
+    sort: {
+      createdAt: -1,
+    },
     populate: [
       {
         path: "sender",
