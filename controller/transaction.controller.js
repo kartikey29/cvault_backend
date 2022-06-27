@@ -135,6 +135,7 @@ const deleteTrans = async (req, res) => {
     );
 
     await senderData.save();
+
     await receiverData.save();
 
     return res.status(200).send(deletedTrans);
