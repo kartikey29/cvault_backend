@@ -27,6 +27,7 @@ exports.createDealer = async (req, res) => {
       phone,
       email,
       referalCode,
+      active: true,
       userType: "dealer",
     });
     await InsertDealer.save();
