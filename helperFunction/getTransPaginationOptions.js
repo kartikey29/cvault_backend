@@ -9,12 +9,12 @@ const getOptions = (page) => {
       {
         path: "sender",
         select:
-          "firstName MiddleName lastName phone email active referalCode userType",
+          "firstName UID MiddleName lastName phone email active referalCode userType",
       },
       {
         path: "receiver",
         select:
-          "firstName MiddleName lastName phone email active referalCode userType",
+          "firstName UID MiddleName lastName phone email active referalCode userType",
       },
     ],
   };
