@@ -39,9 +39,7 @@ const postTrans = async (req, res) => {
     }
 
     const dealerMargin =
-      senderData.userType === "dealer"
-        ? senderData.margin
-        : recieverData.margin;
+      senderData.userType === "dealer" ? senderData.margin : null;
 
     const insertTrans = await new Transaction({
       transactionType,
