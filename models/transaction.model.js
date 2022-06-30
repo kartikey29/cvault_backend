@@ -51,6 +51,10 @@ const transSchema = new mongoose.Schema(
       enum: ["dealer", "customer"],
       required: true,
     },
+    dealerMargin: {
+      required: true,
+      type: Number,
+    },
   },
   { timestamps: true }
 );

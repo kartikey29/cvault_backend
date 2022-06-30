@@ -38,6 +38,11 @@ const postTrans = async (req, res) => {
       throw { message: "sender or reciever is admin" };
     }
 
+    const dealerMargin =
+      senderData.userType === "dealer"
+        ? senderData.margin
+        : recieverData.margin;
+
     const insertTrans = await new Transaction({
       transactionType,
       cryptoType,
@@ -48,6 +53,7 @@ const postTrans = async (req, res) => {
       currency,
       sender: senderData._id,
       senderType: senderData.userType,
+      dealerMargin,
     });
     await insertTrans.save();
 
