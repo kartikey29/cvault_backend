@@ -1,8 +1,32 @@
 var express = require("express");
-var router = express.Router();
+const authMiddleware = require("../middleware/middleware").verifyToken;
 
-const transaction = require("../controller/transaction");
+var transactionRoute = express.Router();
+const {
+  postTrans,
+  getTrans,
+  // editTrans,
+  getAllTransaction,
+  deleteTrans,
+  changeTransactionStatus,
+} = require("../controller/transaction.controller");
 
-/* GET home page. */
-router.get("/test", transaction.test);
-module.exports = router;
+/* POST Transaction page. */
+transactionRoute.post("/post-transaction", authMiddleware, postTrans);
+
+/* GET Transaction page. */
+transactionRoute.get("/get-transaction", authMiddleware, getTrans);
+
+// transactionRoute.post("/edit-trans", editTrans);
+
+transactionRoute.get("/getAllTransaction", getAllTransaction);
+
+transactionRoute.delete("/deleteTrans", deleteTrans);
+
+transactionRoute.patch(
+  "/changeStatus",
+  authMiddleware,
+  changeTransactionStatus
+);
+
+module.exports = transactionRoute;
