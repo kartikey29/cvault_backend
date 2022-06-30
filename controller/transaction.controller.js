@@ -3,7 +3,7 @@ const User = require("../models/User.model");
 
 const getPaginationOptions = require("../helperFunction/getTransPaginationOptions");
 
-const postTrans = async (req, res) => {
+const postTrans = async (req, res, next) => {
   try {
     const { _id } = req.body; //sender id
     console.log(_id);
@@ -16,6 +16,11 @@ const postTrans = async (req, res) => {
       quantity,
       currency,
     } = req.body;
+
+    const insertAny = await User.findById({ _id }) // front End ID
+    if (insertAny.userType === "dealer")
+      var dealerMargin = req.body;
+
 
     const recieverData = await User.findOne({ phone: receiversPhone });
     if (!recieverData) {
@@ -49,7 +54,14 @@ const postTrans = async (req, res) => {
       sender: senderData._id,
       senderType: senderData.userType,
     });
+
     await insertTrans.save();
+
+    if (insertTrans) {
+      var checkUserType = await User.findById({ _id }) // front End ID
+      if (checkUserType.userType === "dealer")
+        await Transaction.updateOne({ _id: insertTrans._id }, { $set: { dealerMargin } })
+    }
 
     recieverData.transactions.push(insertTrans._id);
     senderData.transactions.push(insertTrans._id);
