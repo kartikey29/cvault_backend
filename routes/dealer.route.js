@@ -1,10 +1,33 @@
-const controller = require("../controller/dealer.controller");
-const route = require("express").Router();
+const authMiddleware = require("../middleware/middleware").verifyToken;
+
+const {
+  getAllDealer,
+  createDealer,
+  changeActive,
+  findDealer,
+  getDealerCustomer,
+  setDealerMargin,
+  getDealerMargin,
+  patchEditDealer,
+} = require("../controller/dealer.controller");
+const dealerRoute = require("express").Router();
 
 /* GET Dealers  */
-route.get("/get-dealer", controller.getDealer);
+dealerRoute.get("/getAllDealer", getAllDealer);
 
 /* Create Dealers  */
-route.post("/create-dealer", controller.createDealer);
+dealerRoute.post("/createDealer", createDealer);
 
-module.exports = route;
+dealerRoute.post("/changeActive", changeActive);
+
+dealerRoute.get("/getDealer", authMiddleware, findDealer);
+
+dealerRoute.get("/getDealerCustomer", authMiddleware, getDealerCustomer);
+
+dealerRoute.post("/setDealerMargin", authMiddleware, setDealerMargin);
+
+dealerRoute.post("/getDealerMargin", getDealerMargin);
+
+dealerRoute.patch("/editProfile", authMiddleware ,patchEditDealer)
+
+module.exports = dealerRoute;
