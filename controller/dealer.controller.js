@@ -104,7 +104,9 @@ exports.getDealerCustomer = async (req, res) => {
     const CustomerData = await User.find({
       referalCode: referal,
       userType: "customer",
-    }).select("-token -status");
+    })
+      .select("-token -status")
+      .sort({ createdAt: -1 });
 
     return res.status(200).send(CustomerData);
   } catch (e) {
