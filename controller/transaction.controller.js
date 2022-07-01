@@ -60,13 +60,11 @@ const postTrans = async (req, res) => {
     await recieverData.save();
     await senderData.save();
 
-    return res
-      .status(201)
-      .json({
-        message: "Data inserted Successfully",
-        data: insertTrans,
-        senderUID: senderData.UID,
-      });
+    return res.status(201).json({
+      message: "Data inserted Successfully",
+      data: insertTrans,
+      recieverUID: recieverData.UID,
+    });
   } catch (error) {
     console.log(error);
     return res.status(400).send(error);
