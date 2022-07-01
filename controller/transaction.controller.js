@@ -6,7 +6,6 @@ const getPaginationOptions = require("../helperFunction/getTransPaginationOption
 const postTrans = async (req, res) => {
   try {
     const { _id } = req.body; //sender id
-    console.log(_id);
     const {
       receiversPhone,
       transactionType,
