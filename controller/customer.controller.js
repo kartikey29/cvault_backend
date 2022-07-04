@@ -20,7 +20,7 @@ const getAllCustomer = async (req, res, next) => {
 
     return res.send(customerData);
   } catch (error) {
-    return res.status(500).json(error);
+    return res.status(500).json({ success: false, error: error.message, message: "Something went wrong" });
   }
 };
 
@@ -47,12 +47,21 @@ const postCustomer = async (req, res) => {
       referalCode: req.body.referalCode,
       userType: "customer",
     });
-    await insertCustomer.save();
-    return res
-      .status(200)
-      .json({ message: "Data inserted Successfully", data: insertCustomer });
+    if (!firstName || !lastName || !email || !phone) {
+      throw { message: "Enter all fields" };
+    }
+    if (!insertCustomer) {
+      throw { message: "Something went wrong" };
+    } else {
+      const customerData = await insertCustomer.save();
+      if (!customerData) {
+        throw { message: "Something went wrong" };
+      } else {
+        return res.status(200).json({ message: "Data inserted Successfully", data: insertCustomer });
+      }
+    }
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ success: false, error: error.message, message: "Something went wrong" });
   }
 };
 

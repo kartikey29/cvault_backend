@@ -16,9 +16,13 @@ const postTrans = async (req, res, next) => {
       currency,
     } = req.body;
 
+    if (!receiversPhone || !transactionType || !cryptoType || !price || !costPrice || !quantity || !currency) {
+      throw { message: "Enter all fields" };
+    }
+
     const insertAny = await User.findById({ _id }) // front End ID
     if (insertAny.userType === "dealer")
-      var dealerMargin = req.body;
+      dealerMargin = req.body;
 
 
     const recieverData = await User.findOne({ phone: receiversPhone });
@@ -57,9 +61,7 @@ const postTrans = async (req, res, next) => {
       senderType: senderData.userType,
       dealerMargin,
     });
-
     await insertTrans.save();
-
     if (insertTrans) {
       var checkUserType = await User.findById({ _id }) // front End ID
       if (checkUserType.userType === "dealer")
@@ -79,7 +81,11 @@ const postTrans = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(400).send(error);
+    return res.status(400).json({
+      message: "Error in inserting data",
+      error: error.message,
+      success: false,
+    });
   }
 };
 
@@ -94,7 +100,11 @@ const getTrans = async (req, res) => {
     return res.status(200).send(fetchTrans);
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ error });
+    return res.status(400).json({
+      error: error.message,
+      success: false,
+      message: "Something went wrong",
+    });
   }
 };
 
@@ -131,6 +141,8 @@ const getAllTransaction = async (req, res) => {
 const deleteTrans = async (req, res) => {
   try {
     const { transID } = req.body;
+    if (!transID)
+      throw { message: "transaction id is required" };
 
     const deletedTrans = await Transaction.findOneAndDelete({ _id: transID });
 
@@ -164,6 +176,8 @@ const deleteTrans = async (req, res) => {
 const changeTransactionStatus = async (req, res) => {
   try {
     const { _id, status, transID } = req.body;
+    if (!status || !transID)
+      throw { message: "all fields are required" };
 
     const userData = await User.findById(_id);
 

@@ -3,6 +3,9 @@ const User = require("../models/User.model");
 exports.getAdminData = async (req, res) => {
   try {
     const { _id } = req.body;
+    if (!_id) {
+      throw { message: "id is required" };
+    }
     const adminData = await User.findOne({ _id, userType: "admin" }).populate({
       path: "transactions",
       populate: [
@@ -23,7 +26,9 @@ exports.getAdminData = async (req, res) => {
 exports.setAdminMargin = async (req, res) => {
   try {
     const { _id, margin } = req.body;
-
+    if (!_id || !margin) {
+      throw { message: "id and margin are required" };
+    }
     const adminData = await User.findOne({ _id, userType: "admin" });
 
     if (!adminData) {

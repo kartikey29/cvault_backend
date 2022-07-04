@@ -30,14 +30,20 @@ exports.createDealer = async (req, res) => {
       active: true,
       userType: "dealer",
     });
-    await InsertDealer.save();
-    return res
-      .status(200)
-      .json({ message: "Data Inserted Successfully", InsertDealer });
+    if (!firstName || !lastName || !phone || !email)
+      throw { message: "please fill all the fields" };
+    if (!InsertDealer) {
+      throw { message: "dealer doesnt exist" };
+    } else {
+      await InsertDealer.save();
+      return res.status(201).json({ message: "Data Inserted Successfully", InsertDealer });
+    }
   } catch (error) {
     console.log(error);
-    return res.status(400).send({
-      error,
+    return res.status(400).json({
+      sucess: false,
+      error: error.message,
+      message: "Something went wrong",
     });
   }
 };

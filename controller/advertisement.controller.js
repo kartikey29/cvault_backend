@@ -4,10 +4,17 @@ const advertise = require("../models/advertisement.model");
 exports.getAdvert = async (req, res) => {
   try {
     const fetchedData = await advertise.find({});
-    return res.status(200).send(fetchedData);
+    if (fetchedData.length == 0 || fetchedData == null) {
+      return res.status(404).send({ message: "No Data Found" });
+    } else {
+      return res.status(200).send(fetchedData);
+    }
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Server Error " });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Server is not Responding"
+    });
   }
 };
 
@@ -15,10 +22,14 @@ exports.getAdvert = async (req, res) => {
 exports.advertLink = async (req, res) => {
   try {
     const bodyData = req.body.link; // put anything here later
+    if (!bodyData) {
+      return res.status(400).send({ message: "Link is required" });
+    }
+
     const findLink = await advertise.find({});
 
     // If found Deleting The link data
-    console.log(findLink.length);
+    // console.log(findLink.length);
     if (findLink.length != 0) {
       await advertise.deleteMany({});
     }
@@ -32,7 +43,7 @@ exports.advertLink = async (req, res) => {
       insertLink,
     });
   } catch (error) {
-    return res.status(500).json({ error });
+    return res.status(500).json({ success: false, error: error.message, message: "Server is not Responding" });
   }
 };
 
