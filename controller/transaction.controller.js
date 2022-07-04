@@ -6,7 +6,6 @@ const getPaginationOptions = require("../helperFunction/getTransPaginationOption
 const postTrans = async (req, res, next) => {
   try {
     const { _id } = req.body; //sender id
-    console.log(_id);
     const {
       receiversPhone,
       transactionType,
@@ -44,7 +43,7 @@ const postTrans = async (req, res, next) => {
     }
 
     const dealerMargin =
-      senderData.userType === "dealer" ? senderData.margin : null;
+      senderData.userType === "dealer" ? senderData.margin : 0;
 
     const insertTrans = await new Transaction({
       transactionType,
@@ -73,9 +72,11 @@ const postTrans = async (req, res, next) => {
     await recieverData.save();
     await senderData.save();
 
-    return res
-      .status(201)
-      .json({ message: "Data inserted Successfully", data: insertTrans });
+    return res.status(201).json({
+      message: "Data inserted Successfully",
+      data: insertTrans,
+      recieverUID: recieverData.UID,
+    });
   } catch (error) {
     console.log(error);
     return res.status(400).send(error);
