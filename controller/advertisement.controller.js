@@ -14,17 +14,17 @@ exports.getAdvert = async (req, res) => {
 // Post Request
 exports.advertLink = async (req, res) => {
   try {
-    const bodyData = req.body.link; // put anything here later
+    const { imageLink, redirectLink } = req.body; // put anything here later
     const findLink = await advertise.find({});
 
     // If found Deleting The link data
-    console.log(findLink.length);
     if (findLink.length != 0) {
       await advertise.deleteMany({});
     }
     // if Not Found inserting the link Data
     const insertLink = await advertise({
-      link: bodyData,
+      imageLink,
+      redirectLink,
     });
     await insertLink.save();
     return res.status(201).json({
