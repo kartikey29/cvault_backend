@@ -1,9 +1,13 @@
 const mongoose = require("mongoose");
 
 const advertSchema = new mongoose.Schema({
-  link: {
+  imageLink: {
     type: String,
     required: true,
+    unique: true,
+  },
+  redirectLink: {
+    type: String,
     unique: true,
   },
   date: {
