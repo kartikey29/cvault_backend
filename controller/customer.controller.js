@@ -74,7 +74,7 @@ const findCustomer = async (req, res) => {
         },
         {
           path: "notifications",
-          options: { sort: { created_at: -1 } },
+          options: { sort: { createdAt: -1 } },
         },
       ])
       .select("-token -status");

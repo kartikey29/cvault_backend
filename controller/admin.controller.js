@@ -11,7 +11,7 @@ exports.getAdminData = async (req, res) => {
           { path: "sender", select: "firstName middleName lastName" },
         ],
       },
-      { path: "notifications", options: { sort: { created_at: -1 } } },
+      { path: "notifications", options: { sort: { createdAt: -1 } } },
     ]);
 
     if (!adminData) {
