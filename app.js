@@ -12,6 +12,7 @@ const advertisementRoute = require("./routes/advertisement.route");
 const customerRoute = require("./routes/customer.route");
 const uidRoute = require("./routes/tokenUID.route");
 const adminRoute = require("./routes/admin.routes");
+const notificationRoute = require("./routes/notification.route");
 
 // Middleware
 const bodyParser = require("body-parser");
@@ -27,6 +28,7 @@ app.use("/dealer", dealerRoute);
 app.use("/customer", customerRoute);
 app.use("/token", uidRoute);
 app.use("/admin", adminRoute);
+app.use("/notification", notificationRoute);
 
 //handle incorrect req
 

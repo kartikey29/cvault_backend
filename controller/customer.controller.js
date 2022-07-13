@@ -59,17 +59,24 @@ const postCustomer = async (req, res) => {
 const findCustomer = async (req, res) => {
   try {
     const { _id } = req.body;
+    console.log(_id);
     const customerData = await User.findOne({
       _id,
       userType: "customer",
     })
-      .populate({
-        path: "transactions",
-        populate: [
-          { path: "receiver", select: "firstName middleName lastName" },
-          { path: "sender", select: "firstName middleName lastName" },
-        ],
-      })
+      .populate([
+        {
+          path: "transactions",
+          populate: [
+            { path: "receiver", select: "firstName middleName lastName" },
+            { path: "sender", select: "firstName middleName lastName" },
+          ],
+        },
+        {
+          path: "notifications",
+          options: { sort: { created_at: -1 } },
+        },
+      ])
       .select("-token -status");
 
     if (!customerData) {

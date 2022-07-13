@@ -59,6 +59,12 @@ const userSchema = new mongoose.Schema({
       ref: "Transaction",
     },
   ],
+  notifications: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Notification",
+    },
+  ],
 });
 
 userSchema.plugin(mongoosePaginate);

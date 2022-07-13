@@ -3,13 +3,16 @@ const User = require("../models/User.model");
 exports.getAdminData = async (req, res) => {
   try {
     const { _id } = req.body;
-    const adminData = await User.findOne({ _id, userType: "admin" }).populate({
-      path: "transactions",
-      populate: [
-        { path: "receiver", select: "firstName middleName lastName" },
-        { path: "sender", select: "firstName middleName lastName" },
-      ],
-    });
+    const adminData = await User.findOne({ _id, userType: "admin" }).populate([
+      {
+        path: "transactions",
+        populate: [
+          { path: "receiver", select: "firstName middleName lastName" },
+          { path: "sender", select: "firstName middleName lastName" },
+        ],
+      },
+      { path: "notifications", options: { sort: { created_at: -1 } } },
+    ]);
 
     if (!adminData) {
       throw { message: "admin doesnt exist" };
